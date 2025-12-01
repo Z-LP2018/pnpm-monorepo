@@ -1,0 +1,16 @@
+node_modules
+dist
+build
+.turbo
+coverage
+*.min.js
+*.min.css
+pnpm-lock.yaml
+package-lock.json
+yarn.lock
+# 自动生成的文件
+**/auto-imports.d.ts
+**/components.d.ts
+# VitePress cache
+docs/.vitepress/cache
+**/.vitepress/cache

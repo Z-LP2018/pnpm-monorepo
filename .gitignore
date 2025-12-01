@@ -1,0 +1,124 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Build outputs
+dist/
+dist-ssr/
+build/
+out/
+.output/
+.vercel/
+.netlify/
+
+# Cache directories
+.turbo/
+.cache/
+.parcel-cache/
+.vite/
+.nuxt/
+.next/
+*/**/cache
+
+# Test coverage
+coverage/
+*.lcov
+.nyc_output/
+
+# Environment files
+.env.production
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+*.swp
+*.swo
+*~
+
+# Vue
+*.local
+
+# Nuxt
+.nuxt/
+.output/
+.nitro/
+
+# Storybook
+storybook-static/
+
+# Testing
+.jest/
+
+# Tauri
+**/target/
+
+# Docker
+*.tar
+*.tar.gz
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Lock files (keep pnpm-lock.yaml)
+# package-lock.json
+# yarn.lock
+
+# TypeScript
+*.tsbuildinfo
+
+# Misc
+.eslintcache
+# vite自动生成的类型文件
+**/auto-imports.d.ts
+**/components.d.ts
+
+#nest自帶的ignore文件
+# Tests
+/coverage
+/.nyc_output
+# IDEs and editors
+/.idea
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+# temp directory
+*/**/*.temp
+*/**/*.tmp

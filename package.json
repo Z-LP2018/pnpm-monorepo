@@ -1,0 +1,63 @@
+{
+  "name": "gu_lu_gu_lu",
+  "version": "1.0.0",
+  "description": "企业级前端工程化平台 - 基于 pnpm monorepo 的大型前端工程化解决方案",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "turbo run dev",
+    "docs:dev": "turbo run docs:dev",
+    "docs:build": "turbo run docs:build",
+    "docs:preview": "turbo run docs:preview",
+    "start:dev": "turbo run start:dev",
+    "start:build": "turbo run start:build",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md,vue,css,scss}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md,vue,css,scss}\"",
+    "type-check": "turbo run type-check",
+    "test": "turbo run test",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest --coverage",
+    "clean": "turbo run clean && rimraf node_modules",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:logs": "docker-compose logs -f",
+    "prepare": "husky install",
+    "changeset": "changeset",
+    "version": "changeset version",
+    "release": "pnpm build && changeset publish"
+  },
+  "keywords": [
+    "monorepo",
+    "pnpm",
+    "vue3",
+    "typescript",
+    "micro-frontend",
+    "microservices",
+    "frontend-engineering"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@changesets/cli": "^2.29.7",
+    "@commitlint/cli": "^19.6.0",
+    "@commitlint/config-conventional": "^19.6.0",
+    "@types/node": "^24.10.1",
+    "@vitest/coverage-v8": "^1.6.1",
+    "@vitest/ui": "^1.6.1",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.6",
+    "oxlint": "^1.28.0",
+    "prettier": "^3.4.2",
+    "rimraf": "^6.0.1",
+    "turbo": "^2.6.1",
+    "typescript": "^5.9.3",
+    "vitest": "^1.6.1"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=9.0.0"
+  },
+  "packageManager": "pnpm@9.0.0"
+}
