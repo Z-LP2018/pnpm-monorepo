@@ -1,0 +1,36 @@
+{
+  "name": "@gulu/shared-types",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "./dist/index.d.ts",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc --emitDeclarationOnly",
+    "dev": "tsc --emitDeclarationOnly --watch",
+    "clean": "rm -rf dist",
+    "type-check": "tsc --noEmit"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts"
+    },
+    "./dtos": {
+      "types": "./dist/dtos/index.d.ts"
+    },
+    "./types": {
+      "types": "./dist/types/index.d.ts"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "typescript",
+    "types",
+    "monorepo",
+    "shared"
+  ],
+  "devDependencies": {
+    "typescript": "^5.3.3"
+  }
+}
