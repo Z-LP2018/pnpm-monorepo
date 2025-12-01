@@ -3,24 +3,6 @@ import { Inject, Injectable } from '@nestjs/common'
 import { ClientProxy } from '@nestjs/microservices'
 import { MICROSERVICE_CLIENTS } from '../../config/my-config.service'
 import { MicroserviceProxyBase } from './microservice-proxy.base'
-export interface UploadCredentials {
-  accessKeyId: string
-  accessKeySecret: string
-  securityToken: string
-  bucket: string
-  region: string
-  expiration: number
-  uploadUrl: string
-}
-
-export interface FileInfo {
-  url: string
-  filename: string
-  size: number
-  mimeType: string
-  uploadedAt: string
-}
-
 @Injectable()
 export class FileServiceProxy extends MicroserviceProxyBase {
   constructor(
@@ -30,16 +12,22 @@ export class FileServiceProxy extends MicroserviceProxyBase {
   ) {
     super(client, 10000) // 文件服务超时 10s
   }
-  async uploadFile(data: any): Promise<UploadCredentials> {
-    return this.send<UploadCredentials>('upload.create', { data })
+  async uploadFile(userId: string, file: Express.Multer.File): Promise<void> {
+    // 将 Buffer 转换为 base64 字符串以便通过微服务传递
+    const serializedFile = {
+      fieldname: file.fieldname,
+      originalname: file.originalname,
+      encoding: file.encoding,
+      mimetype: file.mimetype,
+      buffer: file.buffer.toString('base64'),
+      size: file.size,
+    }
+    return this.send('upload.create', { userId, file: serializedFile })
   }
-  async deleteFile(fileUrl: string): Promise<boolean> {
-    return this.send<boolean>('upload.delete', { fileUrl })
+  async deleteFile(userId: string, fileUrl: string): Promise<void> {
+    return this.send('upload.delete', { userId, fileUrl })
   }
-  async getFileInfo(fileUrl: string): Promise<FileInfo> {
-    return this.send<FileInfo>('upload.getInfo', { fileUrl })
-  }
-  async batchDeleteFiles(fileUrls: string[]): Promise<{ success: number; failed: number }> {
-    return this.send('upload.batchDelete', { fileUrls })
+  async deleteAll(userId: string): Promise<void> {
+    return this.send('upload.deleteAll', { userId })
   }
 }

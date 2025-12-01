@@ -1,4 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common'
+import { ConfigService } from '@nestjs/config'
 import * as Minio from 'minio'
 import { MyConfigService, PrivateName } from 'src/config/my-config.service'
 
@@ -6,7 +7,8 @@ import { MyConfigService, PrivateName } from 'src/config/my-config.service'
 export class MinioProxy {
   constructor(
     @Inject(PrivateName.MINIO) private readonly minioClient: Minio.Client,
-    private readonly myConfigService: MyConfigService
+    private readonly myConfigService: MyConfigService,
+    private readonly configService: ConfigService
   ) {}
   //设置桶为公共访问
   private async setPublicPolicy(bucketName: string): Promise<void> {
@@ -43,18 +45,14 @@ export class MinioProxy {
   }
   // 删除非空桶
   async removeBucketWithContents(bucketName: string): Promise<void> {
-    try {
-      const exists = await this.minioClient.bucketExists(bucketName)
-      if (!exists) {
-        return
-      }
-      // 1. 删除桶中的所有对象
-      await this.removeAllObjects(bucketName)
-      // 2. 删除桶
-      await this.minioClient.removeBucket(bucketName)
-    } catch (error) {
-      throw error
+    const exists = await this.minioClient.bucketExists(bucketName)
+    if (!exists) {
+      return
     }
+    // 1. 删除桶中的所有对象
+    await this.removeAllObjects(bucketName)
+    // 2. 删除桶
+    await this.minioClient.removeBucket(bucketName)
   }
   //创建桶
   async minioHasBucketOrCreate(bucketName: string) {
@@ -66,7 +64,16 @@ export class MinioProxy {
   }
   //上传文件
   async uploadFile(bucketName: string, file: Express.Multer.File) {
-    const fileUrl = await this.minioClient.putObject(bucketName, file.originalname, file.buffer)
+    const fileName = `${Date.now()}-${file.originalname}`
+    await this.minioClient.putObject(bucketName, fileName, file.buffer, file.size, {
+      'Content-Type': file.mimetype,
+    })
+    const fileUrl = `${this.configService.get('MINIO_END_POINT')}:${this.configService.get('MINIO_PORT')}/${bucketName}/${fileName}`
     return fileUrl
+  }
+  //删除文件
+  async deleteFile(bucketName: string, url: string) {
+    const fileName = url.split('/').pop() || ''
+    await this.minioClient.removeObject(bucketName, fileName)
   }
 }

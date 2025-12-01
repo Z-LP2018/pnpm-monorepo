@@ -5,30 +5,24 @@ import { UploadService } from './upload.service'
 export class UploadController {
   constructor(private readonly uploadService: UploadService) {}
   @MessagePattern('upload.create')
-  async uploadFile(@Payload() data: { data: { userId: string; file: Express.Multer.File } }) {
-    return this.uploadService.uploadFile(data.data.userId, data.data.file)
+  async uploadFile(@Payload() data: { userId: string; file: any }) {
+    // 将 base64 字符串转换回 Buffer
+    const file: Express.Multer.File = {
+      fieldname: data.file.fieldname,
+      originalname: data.file.originalname,
+      encoding: data.file.encoding,
+      mimetype: data.file.mimetype,
+      buffer: Buffer.from(data.file.buffer, 'base64'), // 从 base64 转换回 Buffer
+      size: data.file.size,
+    } as Express.Multer.File
+    return await this.uploadService.uploadFile(data.userId, file)
   }
-  /**
-   * 删除文件
-   */
   @MessagePattern('upload.delete')
-  async deleteFile(@Payload() data: { fileUrl: string }) {
-    return this.uploadService.deleteFile(data.fileUrl)
+  async deleteFile(@Payload() data: { userId: string; fileUrl: string }) {
+    return await this.uploadService.deleteFile(data.userId, data.fileUrl)
   }
-
-  /**
-   * 获取文件信息
-   */
-  @MessagePattern('upload.getInfo')
-  async getFileInfo(@Payload() data: { fileUrl: string }) {
-    return this.uploadService.getFileInfo(data.fileUrl)
-  }
-
-  /**
-   * 批量删除文件
-   */
-  @MessagePattern('upload.batchDelete')
-  async batchDeleteFiles(@Payload() data: { fileUrls: string[] }) {
-    return this.uploadService.batchDeleteFiles(data.fileUrls)
+  @MessagePattern('upload.deleteAll')
+  async deleteAll(@Payload() data: { userId: string }) {
+    return await this.uploadService.deleteAll(data.userId)
   }
 }

@@ -7,4 +7,12 @@ export namespace GuluMicroserviceFileTypes {
     MINIO: 'minio'
     SET_MINIO_BUCKET_PUBLIC: 'setMinioBucketPublic'
   }
+  export interface UploadFileByMicroserviceType {
+    fieldname: string
+    originalname: string
+    encoding: string
+    mimetype: string
+    buffer: string
+    size: number
+  }
 }
