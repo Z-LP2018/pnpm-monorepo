@@ -508,18 +508,6 @@ gu_lu_gu_lu/
 │       ├── grafana/
 │       └── jaeger/
 │
-├── docs/                              # 文档
-│   ├── architecture/                  # 架构设计文档
-│   │   ├── microservices.md           # 微服务架构
-│   │   ├── frontend.md                # 前端架构
-│   │   └── data-flow.md               # 数据流向
-│   ├── api/                           # API 文档
-│   │   ├── user-api.md
-│   │   └── monitor-api.md
-│   └── guides/                        # 开发指南
-│       ├── getting-started.md
-│       └── deployment.md
-│
 ├── scripts/                           # 工程脚本
 │   ├── build.mjs                      # 构建脚本
 │   ├── deploy.mjs                     # 部署脚本

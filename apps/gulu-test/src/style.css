@@ -1,0 +1,39 @@
+@import 'tailwindcss';
+
+@layer base {
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+}
+
+/* 暗色主题 */
+[data-theme='dark'] {
+  --color-background: #242424;
+  --color-text: rgba(255, 255, 255, 0.87);
+}
+
+/* 亮色主题 */
+[data-theme='light'] {
+  --color-background: #f0f0f0;
+  --color-text: #242424;
+}
+
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  background-color: var(--color-background);
+  color: var(--color-text);
+}
+
+/* 响应式根字体大小设置 - 控制 1rem 的大小 */
+/* 使用 clamp() 实现流畅的响应式缩放 */
+/* 移动端（320px）: 14px, 平板（768px）: 16px, 桌面（1920px）: 18px */
+html {
+  font-size: clamp(12px, 0.5rem + 0.5vw, 20px);
+}
+html,
+body,
+#app {
+  height: 100%;
+}
