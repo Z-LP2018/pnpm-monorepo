@@ -1,0 +1,38 @@
+/* 确保 hero 区域内容居中 */
+.VPHero {
+  text-align: center;
+}
+
+.VPHero .heading,
+.VPHero .text,
+.VPHero .actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.VPHero .tagline {
+  max-width: 100%;
+}
+
+/* 渐变色动画效果 - 透明度变化 */
+.VPHero .name {
+  background: linear-gradient(90deg, #409eff, #66b111, #e6a23c, #f56c6c, #e6a23c, #66b111, #409eff);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradient-opacity 3s ease-in-out infinite;
+}
+
+@keyframes gradient-opacity {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}

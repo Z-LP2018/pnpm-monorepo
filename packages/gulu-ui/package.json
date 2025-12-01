@@ -1,0 +1,53 @@
+{
+  "name": "@gulu/ui",
+  "version": "0.0.0",
+  "type": "module",
+  "main": "./dist/gulu-ui.umd.js",
+  "module": "./dist/gulu-ui.js",
+  "types": "./dist/types/index.d.ts",
+  "scripts": {
+    "clean": "rimraf dist",
+    "dev": "vite",
+    "build": "pnpm clean && vue-tsc -b && vite build",
+    "preview": "vite preview --host",
+    "lint": "oxlint . && prettier --check \"**/*.{ts,tsx,js,jsx,json,md,vue,css,scss}\"",
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:preview": "vitepress preview docs"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/gulu-ui.js",
+      "require": "./dist/gulu-ui.umd.js"
+    },
+    "./gulu-ui.css": "./dist/gulu-ui.css"
+  },
+  "files": [
+    "dist"
+  ],
+  "peerDependencies": {
+    "vue": "^3.5.0",
+    "axios": "^1.13.0"
+  },
+  "dependencies": {
+    "@tailwindcss/vite": "^4.1.17",
+    "axios": "^1.13.2",
+    "less": "^4.4.2",
+    "tailwindcss": "^4.1.17",
+    "vue": "^3.5.24"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.0",
+    "@vitejs/plugin-vue": "^6.0.1",
+    "@vitepress-demo-preview/component": "^2.6.1",
+    "@vitepress-demo-preview/plugin": "^1.4.1",
+    "@vue/tsconfig": "^0.8.1",
+    "rimraf": "^6.0.1",
+    "typescript": "~5.9.3",
+    "vite": "^7.2.2",
+    "vite-plugin-dts": "^4.5.4",
+    "vitepress": "2.0.0-alpha.14",
+    "vue-tsc": "^3.1.3"
+  }
+}

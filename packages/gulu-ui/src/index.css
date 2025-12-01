@@ -1,0 +1,77 @@
+@import 'tailwindcss' layer(utilities) important;
+
+/* 全局 reset - 使用 @layer base 确保正确的层叠顺序 */
+@layer base {
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+}
+
+/* 主题色变量定义 */
+:root {
+  /* 主色调 */
+  --gulu-primary-rgb: 51, 133, 230;
+  --gulu-primary: rgba(var(--gulu-primary-rgb), 0.9);
+  /* 主色调衍生颜色 */
+  --gulu-primary-light: rgba(var(--gulu-primary-rgb), 0.1);
+  --gulu-primary-dark: rgba(var(--gulu-primary-rgb), 1);
+
+  /* 次要色调 */
+  --gulu-secondary-rgb: 102, 102, 102;
+  --gulu-secondary: rgba(var(--gulu-secondary-rgb), 0.9);
+  --gulu-secondary-light: rgba(var(--gulu-secondary-rgb), 0.1);
+  --gulu-secondary-dark: rgba(var(--gulu-secondary-rgb), 1);
+
+  /* 成功色 */
+  --gulu-success-rgb: 27, 158, 75;
+  --gulu-success: rgba(var(--gulu-success-rgb), 0.9);
+  --gulu-success-light: rgba(var(--gulu-success-rgb), 0.1);
+  --gulu-success-dark: rgba(var(--gulu-success-rgb), 1);
+
+  /* 警告色 */
+  --gulu-warning-rgb: 201, 117, 48;
+  --gulu-warning: rgba(var(--gulu-warning-rgb), 0.9);
+  --gulu-warning-light: rgba(var(--gulu-warning-rgb), 0.1);
+  --gulu-warning-dark: rgba(var(--gulu-warning-rgb), 1);
+
+  /* 危险色 */
+  --gulu-danger-rgb: 191, 54, 54;
+  --gulu-danger: rgba(var(--gulu-danger-rgb), 0.9);
+  --gulu-danger-light: rgba(var(--gulu-danger-rgb), 0.1);
+  --gulu-danger-dark: rgba(var(--gulu-danger-rgb), 1);
+
+  /* 信息色 */
+  --gulu-info-rgb: 11, 132, 186;
+  --gulu-info: rgba(var(--gulu-info-rgb), 0.9);
+  --gulu-info-light: rgba(var(--gulu-info-rgb), 0.1);
+  --gulu-info-dark: rgba(var(--gulu-info-rgb), 1);
+
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  background-color: var(--color-background);
+  color: var(--color-text);
+}
+
+/* 暗色主题 */
+[data-theme='dark'] {
+  --color-background: #242424;
+  --color-text: rgba(255, 255, 255, 0.9);
+}
+
+/* 亮色主题 */
+[data-theme='light'] {
+  --color-background: #f0f0f0;
+  --color-text: #242424;
+}
+
+/* 响应式根字体大小设置 - 控制 1rem 的大小 */
+/* 使用 clamp() 实现流畅的响应式缩放 */
+html {
+  font-size: clamp(12px, 0.5rem + 0.5vw, 20px);
+}
+html,
+body,
+#app {
+  height: 100%;
+}
