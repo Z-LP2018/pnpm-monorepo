@@ -1,0 +1,31 @@
+{
+  "name": "@gulu/hooks",
+  "version": "0.0.0",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "clean": "rimraf dist",
+    "dev": "tsup --watch",
+    "build": "pnpm clean && tsup",
+    "lint": "oxlint . && prettier --check \"**/*.{ts,tsx,js,jsx,json,md,vue,css,scss}\""
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "devDependencies": {
+    "@gulu/types": "workspace:*",
+    "@types/node": "^24.10.0",
+    "rimraf": "^6.0.1",
+    "typescript": "~5.9.3",
+    "tsup": "^8.5.1"
+  }
+}
