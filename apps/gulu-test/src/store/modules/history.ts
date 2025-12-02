@@ -1,18 +1,8 @@
 import { defineStore } from 'pinia'
 import type { RouteLocationNormalized } from 'vue-router'
+import type { GuluRouteHistoryTypes } from '@gulu/types'
 
-// 路由历史记录项
-export interface RouteHistoryItem {
-  path: string
-  name?: string | symbol
-  fullPath: string
-  meta?: Record<string, any>
-  title?: string
-  timestamp: number
-  query?: Record<string, any>
-  params?: Record<string, any>
-}
-
+type RouteHistoryItem = GuluRouteHistoryTypes.RouteHistoryItem
 const MAX_MEMORY_HISTORY = 50 // 内存中保留的最大历史记录数
 const MAX_STORAGE_HISTORY = 200 // localStorage 中保留的最大历史记录数
 

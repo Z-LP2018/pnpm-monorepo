@@ -29,10 +29,12 @@
 </template>
 
 <script setup lang="ts">
-import type { RouteHistoryItem } from '@/store/modules/history'
 import { history_store } from '@/store/modules/history'
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
+import type { GuluRouteHistoryTypes } from '@gulu/types'
+
+type RouteHistoryItem = GuluRouteHistoryTypes.RouteHistoryItem
 
 interface Props {
   // 显示的历史记录数量
