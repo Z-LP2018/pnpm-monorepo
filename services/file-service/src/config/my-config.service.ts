@@ -8,6 +8,7 @@ export enum MicroserviceName {
 export enum PrivateName {
   MINIO = 'minio',
   SET_BUCKET_PUBLIC = 'setBucketPublic',
+  MYSQL_CONFIG = 'mysqlUrl',
 }
 @Injectable()
 export class MyConfigService {
@@ -59,6 +60,13 @@ export class MyConfigService {
             },
           ],
         }
+      },
+    }
+  }
+  getMysqlConfig() {
+    return {
+      [PrivateName.MYSQL_CONFIG]: {
+        datasourceUrl: this.configService.get('MYSQL_CONFIG_URL'),
       },
     }
   }

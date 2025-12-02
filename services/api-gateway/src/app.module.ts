@@ -18,6 +18,7 @@ import { MicroserviceClientModule } from 'src/microservices/client/microservice-
 import { MicroserviceProxyModule } from 'src/microservices/proxy/microservice-proxy.module'
 import { AuthModule } from './auth/auth.module'
 import { UploadModule } from './upload/upload.module'
+import { NacosModule } from './nacos/nacos.module'
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { UploadModule } from './upload/upload.module'
     MicroserviceProxyModule,
     //上传模块
     UploadModule,
+    NacosModule,
   ],
   controllers: [AppController],
   providers: [

@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { Transport } from '@nestjs/microservices'
 import { ExtractJwt } from 'passport-jwt'
+
 export const MICROSERVICE_CLIENTS = {
   REDIS_MIDDLEWARE: 'redisMiddleware',
   FILE_CONNECT: 'fileConnect',
