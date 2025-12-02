@@ -5,13 +5,19 @@ const showDialog = ref(false)
 const openDialog = () => {
   showDialog.value = true
 }
+const uploadFiles = ref<ResolveFile[]>([])
 </script>
 
 <template>
   <main class="playground">
     <GuLuButton @click="openDialog">测试</GuLuButton>
+    <GuLuUpload
+      v-model="uploadFiles"
+      autoUpload
+      url="http://localhost:3000/upload"
+      :params="{ userId: '1' }"
+    ></GuLuUpload>
     <GuLuDialog v-model="showDialog" title="测试">
-      <GuLuUpload></GuLuUpload>
       <GuLuProgress :percentage="50"></GuLuProgress>
     </GuLuDialog>
   </main>

@@ -11,7 +11,8 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express'
 import type { Request } from 'express'
 import { UploadService } from './upload.service'
-
+import { DecoratorJumpAuth } from 'src/decorators/jump-auth'
+@DecoratorJumpAuth()
 @Controller('upload')
 export class UploadController {
   constructor(private readonly uploadService: UploadService) {}

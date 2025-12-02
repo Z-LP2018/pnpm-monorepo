@@ -68,7 +68,7 @@ export class MinioProxy {
     await this.minioClient.putObject(bucketName, fileName, file.buffer, file.size, {
       'Content-Type': file.mimetype,
     })
-    const fileUrl = `${this.configService.get('MINIO_END_POINT')}:${this.configService.get('MINIO_PORT')}/${bucketName}/${fileName}`
+    const fileUrl = `http://${this.configService.get('MINIO_END_POINT')}:${this.configService.get('MINIO_PORT')}/${bucketName}/${fileName}`
     return fileUrl
   }
   //删除文件

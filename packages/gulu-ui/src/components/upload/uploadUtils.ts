@@ -2,6 +2,11 @@ export interface ResolveFileItem {
   file: File
   name: string
 }
+export interface ResolveFile {
+  item: ResolveFileItem
+  url: string
+  percentage: number
+}
 export const resolveItems = async (items: DataTransferItemList): Promise<ResolveFileItem[]> => {
   const allFiles: ResolveFileItem[] = []
   // 遍历所有拖拽项
