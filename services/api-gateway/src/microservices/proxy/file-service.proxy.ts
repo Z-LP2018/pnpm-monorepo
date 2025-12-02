@@ -30,4 +30,7 @@ export class FileServiceProxy extends MicroserviceProxyBase {
   async deleteAll(userId: string): Promise<void> {
     return this.send('upload.deleteAll', { userId })
   }
+  async getFilesByUserId(userId: string): Promise<void> {
+    return this.send('upload.getFilesByUserId', { userId })
+  }
 }

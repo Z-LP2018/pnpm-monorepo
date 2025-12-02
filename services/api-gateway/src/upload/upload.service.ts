@@ -13,4 +13,7 @@ export class UploadService {
   async deleteAll(userId: string): Promise<void> {
     return await this.fileServiceProxy.deleteAll(userId)
   }
+  async getFilesByUserId(userId: string): Promise<void> {
+    return await this.fileServiceProxy.getFilesByUserId(userId)
+  }
 }

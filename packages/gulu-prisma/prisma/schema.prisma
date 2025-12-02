@@ -1,15 +1,24 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
+  output   = "../node_modules/.prisma/client"
 }
 
 datasource db {
   provider = "mysql"
+  url = env("DATABASE_URL")
+}
+
+
+// 枚举
+enum Role {
+  USER
+  ADMIN
+  MODERATOR
+}
+
+enum Status {
+  SUCCESS
+  DELETE
 }
 
 // 用户表
@@ -20,6 +29,7 @@ model User {
   password  String
   role      Role     @default(USER)
   files     File[]
+  musics    Music[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   @@map("users")
@@ -36,15 +46,15 @@ model File {
   updatedAt DateTime @updatedAt
   @@map("files")
 }
-
-// 枚举
-enum Role {
-  USER
-  ADMIN
-  MODERATOR
+//音乐表
+model Music {
+  id        String   @id @default(uuid())
+  name      String
+  url       String
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@map("musics")
 }
 
-enum Status {
-  SUCCESS
-  DELETE
-}

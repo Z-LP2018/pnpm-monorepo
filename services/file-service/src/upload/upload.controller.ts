@@ -25,4 +25,8 @@ export class UploadController {
   async deleteAll(@Payload() data: { userId: string }) {
     return await this.uploadService.deleteAll(data.userId)
   }
+  @MessagePattern('upload.getFilesByUserId')
+  async getFilesByUserId(@Payload() data: { userId: string }) {
+    return await this.uploadService.getFilesByUserId(data.userId)
+  }
 }

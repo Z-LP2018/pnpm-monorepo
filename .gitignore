@@ -122,4 +122,4 @@ temp/
 # temp directory
 */**/*.temp
 */**/*.tmp
-*/prisma/migrations
+**/prisma/migrations

@@ -5,7 +5,7 @@ import {
   Logger,
   type OnApplicationShutdown,
 } from '@nestjs/common'
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient } from '.prisma/client'
 import type { INestApplication } from '@nestjs/common'
 
 export interface PrismaServiceOptions {
@@ -26,7 +26,6 @@ export class PrismaService
       ? ['query', 'info', 'warn', 'error']
       : ['error']
 
-    // 如果提供了自定义 datasourceUrl，通过环境变量传递
     if (options?.datasourceUrl) {
       process.env.DATABASE_URL = options.datasourceUrl
     }

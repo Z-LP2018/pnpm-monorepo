@@ -3,6 +3,7 @@ import {
   Body,
   Controller,
   Delete,
+  Get,
   Post,
   Query,
   UploadedFile,
@@ -32,5 +33,9 @@ export class UploadController {
   @Delete('deleteAll')
   async deleteAll(@Query('userId') userId: string) {
     return this.uploadService.deleteAll(userId)
+  }
+  @Get(':userId')
+  async getFilesByUserId(@Query('userId') userId: string) {
+    return this.uploadService.getFilesByUserId(userId)
   }
 }

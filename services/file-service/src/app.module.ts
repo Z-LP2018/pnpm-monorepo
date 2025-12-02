@@ -7,6 +7,7 @@ import { APP_PIPE } from '@nestjs/core'
 import { MyConfigModule } from './config/my-config.module'
 import { MinioModule } from './minio/minio.module'
 import { UploadModule } from './upload/upload.module'
+import { PrismaModule } from '@gulu/prisma'
 
 @Module({
   imports: [
@@ -17,6 +18,10 @@ import { UploadModule } from './upload/upload.module'
     MyConfigModule,
     UploadModule,
     MinioModule,
+    PrismaModule.forRoot({
+      isGlobal: true,
+      datasourceUrl: 'mysql://root:root@localhost:4003/myDataBase',
+    }),
   ],
   controllers: [AppController],
   providers: [
