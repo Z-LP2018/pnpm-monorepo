@@ -1,5 +1,5 @@
 {
-  "name": "@gulu/shared-types",
+  "name": "@gulu/types",
   "version": "1.0.0",
   "type": "module",
   "main": "./dist/index.d.ts",

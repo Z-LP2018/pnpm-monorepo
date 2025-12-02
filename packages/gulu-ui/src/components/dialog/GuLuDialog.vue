@@ -27,19 +27,25 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, onUnmounted, watch, type PropType } from 'vue'
-
+import { onMounted, onUnmounted, watch } from 'vue'
+interface GuluDialogProps {
+  title?: string
+  width?: string
+  zIndex?: number
+  appendToBody?: boolean
+  closeOnClickModal?: boolean
+  closeOnPressEscape?: boolean
+  beforeClose?: (done: () => void) => void
+}
 // ==================== Props ====================
-const props = defineProps({
-  title: String,
-  width: { type: String, default: '50%' },
-  zIndex: { type: Number, default: 1000 },
-  appendToBody: { type: Boolean, default: true },
-  closeOnClickModal: { type: Boolean, default: true },
-  closeOnPressEscape: { type: Boolean, default: true },
-  beforeClose: Function as PropType<(done: () => void) => void>,
+const props = withDefaults(defineProps<GuluDialogProps>(), {
+  title: '',
+  width: '50%',
+  zIndex: 1000,
+  appendToBody: true,
+  closeOnClickModal: true,
+  closeOnPressEscape: true,
 })
-
 // ==================== Model ====================
 const modelValue = defineModel<boolean>({ default: false })
 

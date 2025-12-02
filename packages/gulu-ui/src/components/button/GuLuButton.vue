@@ -9,13 +9,13 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
+import type { GuluButtonTypes } from '@gulu/types'
 
-const props = defineProps<{
-  //是否显示加载状态
+interface GuluButtonProps {
   loading?: boolean
-  //按钮的语义类别
   variant?: 'primary' | 'secondary' | 'ghost'
-}>()
+}
+const props = defineProps<GuluButtonProps>()
 
 const buttonClasses = computed(() => {
   return {
