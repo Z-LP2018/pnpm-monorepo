@@ -1,25 +1,25 @@
 import {
   BadRequestException,
+  Body,
   Controller,
   Delete,
   Post,
   Query,
-  Req,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common'
 import { FileInterceptor } from '@nestjs/platform-express'
-import type { Request } from 'express'
 import { UploadService } from './upload.service'
 import { DecoratorJumpAuth } from 'src/decorators/jump-auth'
+import { CreateMinioUploadDto } from '@gulu/types'
 @DecoratorJumpAuth()
 @Controller('upload')
 export class UploadController {
   constructor(private readonly uploadService: UploadService) {}
   @Post()
   @UseInterceptors(FileInterceptor('file'))
-  async uploadFile(@UploadedFile() file: Express.Multer.File, @Req() req: Request) {
-    const userId = (req.body?.userId as string) || ''
+  async uploadFile(@UploadedFile() file: Express.Multer.File, @Body() body: CreateMinioUploadDto) {
+    const userId = body?.userId || ''
     return this.uploadService.uploadFile(userId, file)
   }
   @Delete()
