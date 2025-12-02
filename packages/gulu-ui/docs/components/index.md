@@ -34,8 +34,10 @@ demo-preview=./dialog/demos/index.vue
 
 #### [Upload 上传](/components/upload/)
 
-::: tip 提示
-Upload 组件正在开发中，敬请期待！
+:::preview 基本用法
+
+demo-preview=./upload/demos/index.vue
+
 :::
 
 ## 下一步

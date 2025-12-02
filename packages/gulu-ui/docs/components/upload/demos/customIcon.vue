@@ -3,10 +3,6 @@ import { GuLuUpload, type ResolveFile } from '@gulu/ui'
 import { ref } from 'vue'
 
 const files = ref<ResolveFile[]>([])
-
-const handleUploadSuccess = () => {
-  console.log('上传成功', files.value)
-}
 </script>
 
 <template>
@@ -16,7 +12,13 @@ const handleUploadSuccess = () => {
       url="http://localhost:3000/upload"
       :params="{ userId: '1' }"
       :auto-upload="true"
-      @upload-success="handleUploadSuccess"
-    />
+    >
+      <template #uploadPic>
+        <div style="text-align: center; padding: 20px">
+          <div style="font-size: 48px; margin-bottom: 10px">📁</div>
+          <div style="color: #666">点击或拖拽文件到此处上传</div>
+        </div>
+      </template>
+    </GuLuUpload>
   </div>
 </template>

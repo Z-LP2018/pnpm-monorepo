@@ -4,8 +4,10 @@ import { ref } from 'vue'
 
 const files = ref<ResolveFile[]>([])
 
-const handleUploadSuccess = () => {
-  console.log('上传成功', files.value)
+const uploadParams = {
+  userId: '1',
+  category: 'avatar',
+  timestamp: Date.now(),
 }
 </script>
 
@@ -14,9 +16,11 @@ const handleUploadSuccess = () => {
     <GuLuUpload
       v-model="files"
       url="http://localhost:3000/upload"
-      :params="{ userId: '1' }"
       :auto-upload="true"
-      @upload-success="handleUploadSuccess"
+      :params="uploadParams"
     />
+    <div style="margin-top: 10px; font-size: 12px; color: #666">
+      上传时会附带参数：userId, category, timestamp
+    </div>
   </div>
 </template>

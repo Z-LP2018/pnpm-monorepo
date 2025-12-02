@@ -76,15 +76,14 @@ const handleFileSelect = async (e: Event) => {
   }))
 
   handleFiles(files)
-
   // 清空 input 值，以便可以重复选择同一文件
   target.value = ''
 }
 
 // 统一处理文件（拖拽和点击）
 const handleFiles = async (files: ResolveFileItem[]) => {
+  uploadFiles.value = files.map(item => ({ item, url: '', percentage: 0 }))
   if (props.autoUpload) {
-    uploadFiles.value = files.map(item => ({ item, url: '', percentage: 0 }))
     showUploadDialog.value = true
     await uploadFile(files)
     emits('uploadSuccess')
