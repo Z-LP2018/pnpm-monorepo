@@ -6,6 +6,7 @@ import { ExtractJwt } from 'passport-jwt'
 export const MICROSERVICE_CLIENTS = {
   REDIS_MIDDLEWARE: 'redisMiddleware',
   FILE_CONNECT: 'fileConnect',
+  MESSAGE_CONNECT: 'messageConnect',
 } as const
 export type MicroserviceName = keyof typeof MICROSERVICE_CLIENTS
 @Injectable()
@@ -45,6 +46,15 @@ export class MyConfigService {
         transport: Transport.TCP,
         options: {
           port: this.configService.get('FILE_CONNECT_PORT'),
+          retryAttempts: 3,
+          retryDelay: 3000,
+        },
+        timeout: 3000,
+      },
+      MESSAGE_CONNECT: {
+        transport: Transport.TCP,
+        options: {
+          port: this.configService.get('MESSAGE_CONNECT_PORT'),
           retryAttempts: 3,
           retryDelay: 3000,
         },

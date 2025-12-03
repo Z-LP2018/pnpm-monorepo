@@ -19,7 +19,7 @@ export class MyConfigService {
       [MicroserviceName.File_SERVICE]: {
         transport: Transport.TCP,
         options: {
-          port: this.configService.get('File_SERVICE_PORT'),
+          port: this.configService.get('FILE_SERVICE_PORT'),
         },
       },
       [MicroserviceName.REDIS_MIDDLEWARE]: {

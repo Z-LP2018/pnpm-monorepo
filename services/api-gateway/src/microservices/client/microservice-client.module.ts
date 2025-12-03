@@ -24,6 +24,14 @@ import { MICROSERVICE_CLIENTS, MyConfigService } from '../../config/my-config.se
           return myConfigService.getMicroserviceConfig('REDIS_MIDDLEWARE')
         },
       },
+      {
+        inject: [MyConfigService],
+        name: MICROSERVICE_CLIENTS.MESSAGE_CONNECT,
+        useFactory: (myConfigService: MyConfigService) => {
+          console.log(`✅ 网关--->message微服务连接成功`)
+          return myConfigService.getMicroserviceConfig('MESSAGE_CONNECT')
+        },
+      },
     ]),
   ],
   exports: [ClientsModule],

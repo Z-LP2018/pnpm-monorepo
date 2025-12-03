@@ -1,9 +1,14 @@
 import { Injectable } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
+import { WebscoketService } from './webscoket/webscoket.service'
 @Injectable()
 export class AppService {
-  constructor(private readonly jwtService: JwtService) {}
+  constructor(
+    private readonly jwtService: JwtService,
+    private readonly webscoketService: WebscoketService
+  ) {}
   async getHello() {
+    this.webscoketService.test()
     return 'hello'
   }
   test(): any {

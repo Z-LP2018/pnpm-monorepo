@@ -19,6 +19,8 @@ import { MicroserviceProxyModule } from 'src/microservices/proxy/microservice-pr
 import { AuthModule } from './auth/auth.module'
 import { UploadModule } from './upload/upload.module'
 import { NacosModule } from './nacos/nacos.module'
+import { MessageModule } from './message/message.module'
+import { WebscoketModule } from './webscoket/webscoket.module'
 
 @Module({
   imports: [
@@ -35,6 +37,8 @@ import { NacosModule } from './nacos/nacos.module'
     //上传模块
     UploadModule,
     NacosModule,
+    MessageModule,
+    WebscoketModule,
   ],
   controllers: [AppController],
   providers: [
