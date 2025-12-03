@@ -1,0 +1,187 @@
+stages:
+  - prepare
+  - quality
+  - test
+  - build
+  - deploy
+
+variables:
+  PNPM_VERSION: '8'
+  NODE_VERSION: '20'
+  DOCKER_DRIVER: overlay2
+  DOCKER_TLS_CERTDIR: '/certs'
+
+# 缓存配置
+.pnpm-cache:
+  cache:
+    key:
+      files:
+        - pnpm-lock.yaml
+    paths:
+      - .pnpm-store
+
+# 基础任务模板
+.node-job:
+  image: node:${NODE_VERSION}
+  before_script:
+    - corepack enable
+    - corepack prepare pnpm@${PNPM_VERSION} --activate
+    - pnpm config set store-dir .pnpm-store
+    - pnpm install --frozen-lockfile
+
+# 准备阶段
+install:
+  extends:
+    - .node-job
+    - .pnpm-cache
+  stage: prepare
+  script:
+    - echo "Dependencies installed"
+  artifacts:
+    paths:
+      - node_modules
+      - .pnpm-store
+    expire_in: 1 hour
+
+# 代码质量检查
+lint:
+  extends:
+    - .node-job
+    - .pnpm-cache
+  stage: quality
+  needs: [install]
+  script:
+    - pnpm turbo run lint
+    - pnpm prettier --check .
+
+type-check:
+  extends:
+    - .node-job
+    - .pnpm-cache
+  stage: quality
+  needs: [install]
+  script:
+    - pnpm turbo run type-check
+
+# 测试
+test:unit:
+  extends:
+    - .node-job
+    - .pnpm-cache
+  stage: test
+  needs: [install]
+  script:
+    - pnpm turbo run test --coverage
+  coverage: '/All files[^|]*\|[^|]*\s+([\d\.]+)/'
+  artifacts:
+    reports:
+      coverage_report:
+        coverage_format: cobertura
+        path: coverage/cobertura-coverage.xml
+
+# 构建前端应用
+.build-app:
+  extends:
+    - .node-job
+    - .pnpm-cache
+  stage: build
+  needs: [test:unit]
+  script:
+    - pnpm turbo run build --filter=@apps/${APP_NAME}
+  artifacts:
+    paths:
+      - apps/${APP_NAME}/dist
+    expire_in: 1 week
+
+build:monitor-platform:
+  extends: .build-app
+  variables:
+    APP_NAME: 'monitor-platform'
+
+build:performance-optimizer:
+  extends: .build-app
+  variables:
+    APP_NAME: 'performance-optimizer'
+
+# 构建微服务 Docker 镜像
+.build-service:
+  stage: build
+  image: docker:24
+  services:
+    - docker:24-dind
+  needs: [test:unit]
+  before_script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  script:
+    - |
+      docker build \
+        -f services/${SERVICE_NAME}/Dockerfile \
+        -t $CI_REGISTRY_IMAGE/${SERVICE_NAME}:$CI_COMMIT_SHA \
+        -t $CI_REGISTRY_IMAGE/${SERVICE_NAME}:latest \
+        .
+    - docker push $CI_REGISTRY_IMAGE/${SERVICE_NAME}:$CI_COMMIT_SHA
+    - docker push $CI_REGISTRY_IMAGE/${SERVICE_NAME}:latest
+  only:
+    - main
+    - develop
+
+build:api-gateway:
+  extends: .build-service
+  variables:
+    SERVICE_NAME: 'api-gateway'
+
+build:user-service:
+  extends: .build-service
+  variables:
+    SERVICE_NAME: 'user-service'
+
+# 部署到测试环境
+.deploy-staging:
+  stage: deploy
+  image: alpine/k8s:1.28.0
+  before_script:
+    - mkdir -p ~/.kube
+    - echo "$KUBE_CONFIG_STAGING" | base64 -d > ~/.kube/config
+  script:
+    - |
+      kubectl set image deployment/${SERVICE_NAME} \
+        ${SERVICE_NAME}=$CI_REGISTRY_IMAGE/${SERVICE_NAME}:$CI_COMMIT_SHA \
+        -n staging
+      kubectl rollout status deployment/${SERVICE_NAME} -n staging
+  environment:
+    name: staging
+    url: https://staging.example.com
+  only:
+    - develop
+
+deploy:staging:api-gateway:
+  extends: .deploy-staging
+  variables:
+    SERVICE_NAME: 'api-gateway'
+  needs: [build:api-gateway]
+
+# 部署到生产环境
+.deploy-production:
+  stage: deploy
+  image: alpine/k8s:1.28.0
+  before_script:
+    - mkdir -p ~/.kube
+    - echo "$KUBE_CONFIG_PROD" | base64 -d > ~/.kube/config
+  script:
+    - |
+      kubectl set image deployment/${SERVICE_NAME} \
+        ${SERVICE_NAME}=$CI_REGISTRY_IMAGE/${SERVICE_NAME}:$CI_COMMIT_SHA \
+        -n production
+      kubectl rollout status deployment/${SERVICE_NAME} -n production
+  environment:
+    name: production
+    url: https://example.com
+  when: manual
+  only:
+    - main
+
+deploy:production:api-gateway:
+  extends: .deploy-production
+  variables:
+    SERVICE_NAME: 'api-gateway'
+  needs: [build:api-gateway]

@@ -1,0 +1,54 @@
+# 依赖
+node_modules
+.pnpm-store
+
+# 构建产物
+dist
+build
+.output
+coverage
+
+# 日志
+*.log
+logs
+
+# 环境变量
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+
+# Git
+.git
+.gitignore
+
+# 测试
+test
+*.spec.ts
+*.test.ts
+jest.config.*
+vitest.config.*
+
+# 文档
+*.md
+docs
+
+# CI/CD
+.github
+.gitlab-ci.yml
+
+# Docker
+Dockerfile*
+docker-compose*.yml
+.dockerignore
+
+# 其他
+.DS_Store
+*.tsbuildinfo
+.cache
+

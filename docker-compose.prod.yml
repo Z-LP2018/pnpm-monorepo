@@ -14,6 +14,8 @@ services:
       - ./infrastructure/docker/nginx/ssl:/etc/nginx/ssl:ro
     depends_on:
       - api-gateway
+      - file-service
+      - message-service
     restart: unless-stopped
     networks:
       - gu-network
@@ -21,18 +23,107 @@ services:
   # API 网关
   api-gateway:
     build:
-      context: ./services/api-gateway
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./services/api-gateway/Dockerfile
     container_name: gu-api-gateway-prod
     environment:
       - NODE_ENV=production
       - PORT=3000
+      - SERVICE_NAME=api-gateway
+    env_file:
+      - .env.production
     restart: unless-stopped
     networks:
       - gu-network
     depends_on:
-      - postgres
-      - redis
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test:
+        [
+          'CMD',
+          'wget',
+          '--no-verbose',
+          '--tries=1',
+          '--spider',
+          'http://localhost:3000/health || exit 1',
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # 文件服务
+  file-service:
+    build:
+      context: .
+      dockerfile: ./services/file-service/Dockerfile
+    container_name: gu-file-service-prod
+    environment:
+      - NODE_ENV=production
+      - PORT=3001
+      - SERVICE_NAME=file-service
+    env_file:
+      - .env.production
+    restart: unless-stopped
+    networks:
+      - gu-network
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test:
+        [
+          'CMD',
+          'wget',
+          '--no-verbose',
+          '--tries=1',
+          '--spider',
+          'http://localhost:3001/health || exit 1',
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # 消息服务
+  message-service:
+    build:
+      context: .
+      dockerfile: ./services/message-service/Dockerfile
+    container_name: gu-message-service-prod
+    environment:
+      - NODE_ENV=production
+      - PORT=3002
+      - SERVICE_NAME=message-service
+    env_file:
+      - .env.production
+    restart: unless-stopped
+    networks:
+      - gu-network
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test:
+        [
+          'CMD',
+          'wget',
+          '--no-verbose',
+          '--tries=1',
+          '--spider',
+          'http://localhost:3002/health || exit 1',
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
 
   # PostgreSQL 数据库
   postgres:
@@ -64,7 +155,7 @@ services:
     networks:
       - gu-network
     healthcheck:
-      test: ['CMD', 'redis-cli', '--raw', 'incr', 'ping']
+      test: ['CMD', 'redis-cli', '-a', '${REDIS_PASSWORD:-redis}', 'ping']
       interval: 10s
       timeout: 5s
       retries: 5

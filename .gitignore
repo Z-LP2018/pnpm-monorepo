@@ -26,9 +26,6 @@ coverage/
 *.lcov
 .nyc_output/
 
-# Environment files
-.env.production
-
 # Logs
 logs/
 *.log

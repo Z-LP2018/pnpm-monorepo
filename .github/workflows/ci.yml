@@ -1,104 +1,143 @@
 name: CI
 
 on:
-  push:
-    branches:
-      - main
-      - dev
   pull_request:
-    branches:
-      - main
-      - dev
+    branches: [main]
+  push:
+    branches: [main]
 
-# 取消同一工作流中之前正在运行的作业
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+env:
+  TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+  TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
 
 jobs:
-  # 代码检查和测试
-  lint-and-test:
+  # 检测变更的包
+  detect-changes:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [20.x]
-
+    outputs:
+      apps: ${{ steps.filter.outputs.apps }}
+      services: ${{ steps.filter.outputs.services }}
+      packages: ${{ steps.filter.outputs.packages }}
     steps:
-      - name: Checkout 代码
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v2
+        id: filter
+        with:
+          filters: |
+            apps:
+              - 'apps/**'
+            services:
+              - 'services/**'
+            packages:
+              - 'packages/**'
+
+  # 代码质量检查
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: 安装 pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 9
-
-      - name: 设置 Node.js ${{ matrix.node-version }}
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'pnpm'
+          node-version: '20'
 
-      - name: 安装依赖
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+          run_install: false
+
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - name: Setup pnpm cache
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: 代码格式检查
-        run: pnpm format:check
+      - name: Lint
+        run: pnpm turbo run lint
 
-      - name: 代码质量检查
-        run: pnpm lint
+      - name: Type check
+        run: pnpm turbo run type-check
 
-      - name: TypeScript 类型检查
-        run: pnpm type-check
+      - name: Format check
+        run: pnpm prettier --check .
 
-      - name: 运行测试
-        run: pnpm test:coverage
+  # 测试
+  test:
+    runs-on: ubuntu-latest
+    needs: quality
+    steps:
+      - uses: actions/checkout@v4
 
-      - name: 上传测试覆盖率
-        uses: codecov/codecov-action@v4
-        if: matrix.node-version == '20.x'
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./coverage/coverage-final.json
-          fail_ci_if_error: false
+          node-version: '20'
 
-  # 构建检查
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run tests
+        run: pnpm turbo run test --coverage
+
+      - name: Upload coverage
+        uses: codecov/codecov-action@v3
+        with:
+          files: ./coverage/coverage-final.json
+
+  # 构建
   build:
     runs-on: ubuntu-latest
-    needs: lint-and-test
+    needs: [quality, test]
     strategy:
       matrix:
-        node-version: [20.x]
-
+        scope:
+          - '@apps/monitor-platform'
+          - '@apps/performance-optimizer'
+          - '@services/api-gateway'
+          - '@services/user-service'
     steps:
-      - name: Checkout 代码
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: 安装 pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 9
-
-      - name: 设置 Node.js ${{ matrix.node-version }}
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'pnpm'
+          node-version: '20'
 
-      - name: 安装依赖
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: 构建项目
-        run: pnpm build
+      - name: Build
+        run: pnpm turbo run build --filter=${{ matrix.scope }}
 
-      - name: 上传构建产物
-        uses: actions/upload-artifact@v4
-        if: matrix.node-version == '20.x'
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v3
         with:
-          name: build-artifacts
+          name: build-${{ matrix.scope }}
           path: |
-            apps/**/dist
-            packages/**/dist
-            services/**/dist
+            apps/*/dist
+            services/*/dist
           retention-days: 7

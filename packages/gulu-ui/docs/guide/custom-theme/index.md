@@ -205,4 +205,4 @@ if (container) {
 
 ## 示例
 
-查看 [快速开始](/guide/quick-start) 了解更多使用示例。
+查看 [快速开始](/guide/quick-start/) 了解更多使用示例。

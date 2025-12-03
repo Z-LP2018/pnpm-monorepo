@@ -4,7 +4,8 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": ["dist/**", ".output/**", "build/**"]
+      "outputs": ["dist/**", ".output/**", "build/**"],
+      "env": ["NODE_ENV"]
     },
     "docs:build": {
       "outputs": ["docs/.vitepress/dist/**"]
