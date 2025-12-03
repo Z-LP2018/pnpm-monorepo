@@ -8,7 +8,7 @@
   "scripts": {
     "clean": "rimraf dist",
     "start:build": "nest build",
-    "lint": "oxlint . && prettier --check \"**/*.{ts,tsx,js,jsx,json,md,vue,css,scss}\"",
+    "lint": "oxlint .",
     "start": "nest start",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",

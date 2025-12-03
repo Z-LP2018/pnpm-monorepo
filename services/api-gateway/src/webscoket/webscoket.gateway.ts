@@ -15,7 +15,7 @@ export class WebscoketGateway {
   constructor(private readonly messageServiceProxy: MessageServiceProxy) {}
 
   @SubscribeMessage('test')
-  create(@MessageBody() createWebscoketDto) {
+  create() {
     return {
       event: 'test',
       data: '测试成功',
@@ -24,7 +24,7 @@ export class WebscoketGateway {
   @SubscribeMessage('message')
   async handleMessage(@MessageBody() data: any) {
     const jsonData = JSON.parse(data)
-    const { type, payload } = jsonData
+    const { payload } = jsonData
     await this.messageServiceProxy.getMessagesByUserId(payload.userId)
     this.server.emit('message', {
       event: 'message',

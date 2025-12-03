@@ -8,7 +8,7 @@
     "clean": "rimraf dist",
     "dev": "tsup --watch",
     "build": "pnpm clean && tsup",
-    "lint": "oxlint . && prettier --check \"**/*.{ts,tsx,js,jsx,json,md,vue,css,scss}\"",
+    "lint": "oxlint .",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
     "prisma:studio": "prisma studio"

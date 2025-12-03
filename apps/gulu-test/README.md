@@ -518,7 +518,7 @@ exceptionInterceptor()
     "dev": "vite",
     "build": "vue-tsc -b && vite build",
     "preview": "vite preview",
-    "lint": "oxlint . && prettier --check \"**/*.{ts,tsx,js,jsx,json,md,vue,css,scss}\""
+    "lint": "oxlint ."
   }
 }
 ```
