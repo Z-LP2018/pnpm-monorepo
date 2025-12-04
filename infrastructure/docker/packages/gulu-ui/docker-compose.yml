@@ -1,0 +1,73 @@
+version: '3.8'
+
+services:
+  # Gulu UI 文档站点
+  docs:
+    build:
+      context: ../../../../ # 项目根目录
+      dockerfile: infrastructure/docker/packages/gulu-ui/Dockerfile
+    container_name: gulu-ui-docs
+    ports:
+      - '${DOCS_PORT:-8080}:80'
+    restart: unless-stopped
+    networks:
+      - gulu-network
+    #环境变量
+    environment:
+      - NODE_ENV=production
+    labels:
+      - 'com.gulu.service=docs'
+      - 'com.gulu.type=frontend'
+    healthcheck:
+      test: ['CMD', 'wget', '--quiet', '--tries=1', '--spider', 'http://localhost/']
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+  # 示例：Redis 缓存（如果需要）
+  # redis:
+  #   image: redis:7-alpine
+  #   container_name: gulu-redis
+  #   command: redis-server --requirepass ${REDIS_PASSWORD:-redis}
+  #   ports:
+  #     - "${REDIS_PORT:-6379}:6379"
+  #   volumes:
+  #     - redis_data:/data
+  #   restart: unless-stopped
+  #   networks:
+  #     - gulu-network
+  #   healthcheck:
+  #     test: ['CMD', 'redis-cli', '-a', '${REDIS_PASSWORD:-redis}', 'ping']
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 5
+
+  # 示例：API 网关服务（如果需要）
+  # api-gateway:
+  #   build:
+  #     context: ../../../../  # 项目根目录
+  #     dockerfile: services/api-gateway/Dockerfile
+  #   container_name: gulu-api-gateway
+  #   environment:
+  #     - NODE_ENV=production
+  #     - PORT=3000
+  #   ports:
+  #     - "${API_GATEWAY_PORT:-3000}:3000"
+  #   restart: unless-stopped
+  #   networks:
+  #     - gulu-network
+  #   healthcheck:
+  #     test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000/health"]
+  #     interval: 30s
+  #     timeout: 10s
+  #     retries: 3
+  #     start_period: 40s
+networks:
+  gulu-network:
+    driver: bridge
+
+# 如果需要使用数据卷，取消下面的注释
+# volumes:
+#   postgres_data:
+#   redis_data:
+

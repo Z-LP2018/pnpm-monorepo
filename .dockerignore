@@ -1,54 +1,45 @@
-# 依赖
+# 依赖目录
 node_modules
-.pnpm-store
+**/node_modules
 
 # 构建产物
 dist
-build
-.output
-coverage
+**/dist
+.turbo
+**/.turbo
 
-# 日志
-*.log
-logs
+# 开发文件
+playground
+**/playground
 
-# 环境变量
-.env
-.env.local
-.env.*.local
+# 测试文件
+**/*.test.ts
+**/*.spec.ts
+**/test
+**/tests
 
-# IDE
+# 开发工具配置
 .vscode
 .idea
+*.log
 *.swp
 *.swo
+*~
 
 # Git
 .git
 .gitignore
-
-# 测试
-test
-*.spec.ts
-*.test.ts
-jest.config.*
-vitest.config.*
-
-# 文档
-*.md
-docs
-
-# CI/CD
-.github
-.gitlab-ci.yml
+.gitattributes
 
 # Docker
-Dockerfile*
-docker-compose*.yml
+Dockerfile
 .dockerignore
+docker-compose*.yml
 
+# 文档（构建时会重新生成）
+**/docs/.vitepress/dist
+**/.vitepress/cache
 # 其他
 .DS_Store
-*.tsbuildinfo
-.cache
+Thumbs.db
 
