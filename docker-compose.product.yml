@@ -1,14 +1,12 @@
-version: '3.8'
+version: '0.1'
 
 services:
   # Gulu UI 文档站点
   docs:
-    build:
-      context: ../../../../ # 项目根目录
-      dockerfile: infrastructure/docker/packages/gulu-ui/Dockerfile
+    image: gulu-ui-docs
     container_name: gulu-ui-docs
     ports:
-      - '${DOCS_PORT:-8080}:80'
+      - '${DOCS_PORT:-5001}:80'
     restart: unless-stopped
     networks:
       - gulu-network
@@ -19,10 +17,10 @@ services:
       - 'com.gulu.service=docs'
       - 'com.gulu.type=frontend'
     healthcheck:
-      test: ['CMD', 'wget', '--quiet', '--tries=1', '--spider', 'http://localhost/']
-      interval: 30s
-      timeout: 10s
-      retries: 3
+      test: ['CMD', 'curl', '-f', 'http://localhost/']
+      interval: 10s
+      timeout: 5s
+      retries: 1
       start_period: 10s
   # 示例：Redis 缓存（如果需要）
   # redis:
